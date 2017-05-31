@@ -1,6 +1,9 @@
 Tutorials
 =========
 
+#.  *A good overview if you have experience with deep learning and/or are coming from another toolkit*
+     CNTK 200: :cntktut:`Guided Tour <CNTK_200_GuidedTour>`
+
 #.  *Classify cancer using simulated data (Logistic Regression)*
      CNTK 101: :cntktut:`Logistic Regression <CNTK_101_LogisticRegression>` with NumPy
 
