@@ -1029,51 +1029,6 @@ class Function(cntk_py.Function):
         '''
         return super(Function, self).uid()
 
-    def __str__(self):
-        '''
-        Describes the Function and its signature as a string.
-
-        Example:
-         >>> f = C.log(C.input(1), name='f') # Function constructed as a graph
-         >>> print(f)
-         f: Log(Tensor[1]) -> Tensor[1]
-         >>> d = C.layers.Dense(10) # Function constructed as a layer
-         >>> print(d)
-         Dense(x: Sequence[tensor]) -> Sequence[tensor]
-         >>> @C.Function   # construct a primitive Function through @Function
-         ... def g(x,y):
-         ...     return x+y
-         >>> print(g)
-         Plus(x: Sequence[tensor], y: Sequence[tensor]) -> Sequence[tensor]
-         >>> @C.Function   # construct a composite through @Function
-         ... def h(x,y):
-         ...     return C.exp(x+y)
-         >>> print(h)
-         Composite(x: Sequence[tensor], y: Sequence[tensor]) -> Sequence[tensor]
-        '''
-        f_name = self.name
-        op_name = self.op_name
-        if self.is_composite:
-            if self.root_function and all(i.uid == ri.uid for i, ri in zip(self.inputs, self.root_function.inputs)):
-                op_name = self.root_function.op_name
-            else:
-                op_name = 'Composite' # (real op_name is CompositeFunctionOpName)
-        else:
-            op_name = self.op_name
-
-        args = self.signature
-        def format_arg_spec(v, is_output=False):
-            s = v.name + ': ' if not is_output and v.name else ''  # (suppress output names, since they duplicate the function name)
-            return s + str(v._type)
-        outputs = self.outputs
-        if len(outputs) > 1:
-            output_signature = 'Tuple[' + ', '.join(format_arg_spec(output, True) for output in outputs) + ']'
-        else:
-            output_signature = format_arg_spec(outputs[0], True)
-        if self.name:
-            f_name += ": "
-        return f_name + op_name + '(' + ", ".join([format_arg_spec(param) for param in args]) + ') -> ' + output_signature
-
     @typemap
     def replace_placeholders(self, substitutions):
         '''
